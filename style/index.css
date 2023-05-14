@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap");
+
+body {
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+
+  background: #6c8dae;
+
+  font-family: "Montserrat", sans-serif;
+}
+
+main {
+  width: 60vw;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+button,
+.button {
+  padding: 8px 18px;
+
+  border: none;
+  background: #2f6fb6;
+  border-radius: 5px;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+button:hover,
+button:hover {
+  background: #3672b8;
+}
+
+.result-container {
+  max-width: 320px;
+}
+.result__canvas {
+  width: 320px;
+  min-height: 320px;
+
+  border-radius: 5px;
+  background: #aabfd0;
+}
+.result__send-file {
+}
+.result__download {
+}
+
+.settings {
+  max-width: 320px;
+}
+.settings__pictures-box {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+}
+.settings__pictures {
+  width: 100px;
+  height: 100px;
+
+  background: #aabfd0;
+
+  cursor: pointer;
+}
+.settings__btn-box {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.settings__move-buttons-box {
+  width: 210px;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+
+  padding: 0px 0;
+}
+
+.settings__btn-delete {
+  width: 100px;
+
+  padding: 0px 0;
+}
