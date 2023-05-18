@@ -46,8 +46,7 @@ function initImageGenerator(canvas) {
 
     render() {
       images.forEach((image) => {
-        image.addEventListener('load', () => {
-
+        image.addEventListener("load", () => {
           const { width, height } = image;
 
           ctx.drawImage(image, 0, 0);
@@ -58,20 +57,16 @@ function initImageGenerator(canvas) {
           if (canvas.height < height) {
             canvas.height = height;
           }
-        })
-      })
+        });
+      });
 
       return this;
     },
   };
 }
 
+const generator = initImageGenerator(canvas).addImage();
 
-
-const generator = initImageGenerator(canvas)
-  .addImage();
-
-
-generator.addImage(getPictureFromTheUser())
+generator.addImage(getPictureFromTheUser());
 // .....
-generator.render()
+generator.render();
