@@ -79,8 +79,9 @@ function imageHandler() {
     },
     exportImage() {
       const download = document.querySelector("#download-imege");
-      download.addEventListener("click", () => {
-        console.log(canvas.toDataURL());
+      download.addEventListener("click", (event) => {
+        let imageData = canvas.toDataURL("image/png");
+        download.setAttribute("href", imageData);
       });
     },
   };
