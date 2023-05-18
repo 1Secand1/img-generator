@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/style/normalize.css">
   <link rel="stylesheet" href="style/index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-  <script defer src="script.js"></script>
+  <script defer src="script copy.js"></script>
   <title>Document</title>
 </head>
 
@@ -18,9 +18,9 @@
     <section class="result-container">
       <canvas class="result__canvas" id="canvas"></canvas>
 
-      <div class="">
-        <input class="result__send-file" type="file">
-        <button class="result__download">Скачать</button>
+      <div class="result-container__settings-box">
+        <input class="result__send-file" type="file" id="import-image">
+        <button class="result__download" id="download-imege">Скачать</button>
       </div>
     </section>
 
@@ -46,6 +46,7 @@
           <button class="fas fa-arrow-left"></button>
           <button class="fas fa-arrow-right"></button>
         </div>
+
         <button class="settings__btn-delete">текст</button>
       </div>
     </section>

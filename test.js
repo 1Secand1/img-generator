@@ -1,21 +1,17 @@
 const canvas = document.querySelector("#canvas");
 
-// Для чего это?
-
-// определяет размерары канваса
-// Нах?ё
 // test("/144-20220104_220553-1536x1152.jpg");
 
-let url = nam();
+// let url = nam();
 
-function nam() {
-  const picturesBox = document.querySelector(".settings__pictures-box");
-  picturesBox.addEventListener("click", (event) => {
-    if (!event.target.classList.contains("settings__pictures")) return;
-    url = event.target.src;
-    
-  });
-}
+// function nam() {
+//   const picturesBox = document.querySelector(".settings__pictures-box");
+//   picturesBox.addEventListener("click", (event) => {
+//     if (!event.target.classList.contains("settings__pictures")) return;
+//     url = event.target.src;
+
+//   });
+// }
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -27,7 +23,7 @@ function initImageGenerator(canvas) {
 
   const ctx = canvas.getContext("2d");
 
-  const images = []
+  const images = [];
 
   return {
     /**
@@ -43,38 +39,39 @@ function initImageGenerator(canvas) {
       img.width = img.width / multiplier;
       img.height = img.height / multiplier;
 
-      images.push(img)
+      images.push(img);
 
       return this;
     },
 
     render() {
-      // images.forEach((image) => {
-      //   image.addEventListener('load', () => {
+      images.forEach((image) => {
+        image.addEventListener('load', () => {
 
-      //     const { width, height } = image;
-  
-      //     ctx.drawImage(image, 0, 0);
-            
-      //     if (canvas.width < width) {
-      //       canvas.width = width;
-      //     }
-      //     if (canvas.height < height) {
-      //       canvas.height = height;
-      //     }
-      //   })
-      // })
+          const { width, height } = image;
 
-      return this
+          ctx.drawImage(image, 0, 0);
+
+          if (canvas.width < width) {
+            canvas.width = width;
+          }
+          if (canvas.height < height) {
+            canvas.height = height;
+          }
+        })
+      })
+
+      return this;
     },
-
-
   };
 }
 
-initImageGenerator(canvas)
-  // .addImage(
-  //   "https://mobimg.b-cdn.net/v3/fetch/d6/d603ba2e3546475bcf03baa7177337da.jpeg"
-  // )
-  // .addImage('/img/law.png', 10)
-  .render();
+
+
+const generator = initImageGenerator(canvas)
+  .addImage();
+
+
+generator.addImage(getPictureFromTheUser())
+// .....
+generator.render()

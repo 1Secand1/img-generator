@@ -1,32 +1,71 @@
-const canvas = document.querySelector("#canvas");
-const ctx = canvas.getContext("2d");
+"use strict";
+function main() {
+  const canvas = document.querySelector("#canvas");
+  let ctx = canvas.getContext("2d");
 
-AddImageСanvas("/144-20220104_220553-1536x1152.jpg");
+  async function getPictureFromTheUser() {
+    const inputSendFile = document.querySelector(".result__send-file");
+    const file = inputSendFile.files[0];
+    const reader = new FileReader();
 
-(function displayPictureOnClick() {
-  const picturesBox = document.querySelector(".settings__pictures-box");
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
-  picturesBox.addEventListener("click", (event) => {
-    if (!event.target.classList.contains("settings__pictures")) return;
+  async function canvasRendering() {
+    const inputSendFile = document.querySelector(".result__send-file");
 
-    const { src: PictureUrl } = event.target;
+    inputSendFile.addEventListener("change", async () => {
+      const userPicture = await getPictureFromTheUser();
+      cleanupCanvas();
+      resizingCanvas(userPicture);
+      AddImageCanvas(userPicture);
+      addSelectedPictureTheMainPicture(userPicture);
+    });
+  }
+  canvasRendering();
 
-    redrawingCanvas("/144-20220104_220553-1536x1152.jpg", PictureUrl);
-  });
-})();
+  function addSelectedPictureTheMainPicture(mainPicture) {
+    const picturesBox = document.querySelector(".settings__pictures-box");
 
+    picturesBox.addEventListener("click", (event) => {
+      if (!event.target.classList.contains("settings__pictures")) return;
+      const { src: selectedPicture } = event.target;
 
+      redrawCanvas(mainPicture, selectedPicture);
+    });
+  }
 
-function redrawingCanvas(mainPicture, additionalImage) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  AddImageСanvas(mainPicture);
-  AddImageСanvas(additionalImage);
+  function redrawCanvas(mainPicture, additionalImage) {
+    cleanupCanvas();
+    AddImageCanvas(mainPicture);
+    AddImageCanvas(additionalImage);
+  }
+
+  function AddImageCanvas(url) {
+    const img = new Image();
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = url;
+  }
+
+  function cleanupCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function resizingCanvas(userPicture) {
+    const img = new Image();
+    img.onload = function () {
+      canvas.width = img.width;
+      canvas.height = img.height;
+    };
+    img.src = userPicture;
+  }
 }
-
-function AddImageСanvas(url) {
-  var img = new Image();
-
-  img.onload = () => ctx.drawImage(img, 0, 0, 300, 200);
-
-  img.src = url;
-}
+main();

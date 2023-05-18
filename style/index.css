@@ -38,15 +38,21 @@ button:hover {
 }
 
 .result-container {
-  max-width: 320px;
+  max-width: 500px;
 }
 .result__canvas {
-  width: 320px;
+  max-width: 100%;
   min-height: 320px;
+
+  width: auto;
 
   border-radius: 5px;
   background: #aabfd0;
 }
+.result-container__settings-box {
+  display: flex;
+}
+
 .result__send-file {
 }
 .result__download {
