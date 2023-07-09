@@ -81,7 +81,7 @@ button:hover {
   gap: 10px;
   margin-top: 10px;
 }
-.settings__move-buttons-box {
+.settings__move-buttons {
   width: 210px;
   display: flex;
   justify-content: space-between;
