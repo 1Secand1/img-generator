@@ -45,6 +45,7 @@ function createImageGenerator() {
    * @param {boolean} typeImage - флаг, указывающий, является ли изображение главным
    * @returns {void}
    */
+  
   function drawImage(url, typeImage, x, y, width, height) {
     if (!url || !typeImage) {
       throw new Error("Указанны не все параметры");
