@@ -45,7 +45,7 @@ function createImageGenerator() {
    * @param {boolean} typeImage - флаг, указывающий, является ли изображение главным
    * @returns {void}
    */
-  
+
   function drawImage(url, typeImage, x, y, width, height) {
     if (!url || !typeImage) {
       throw new Error("Указанны не все параметры");
@@ -66,6 +66,7 @@ function createImageGenerator() {
     };
     img.src = url;
   }
+
   return {
     addMainImage(url) {
       drawImage(url, "main");
@@ -100,10 +101,14 @@ function createImageHandler() {
 
     exportImage() {
       const download = document.querySelector("#download-imege");
-      download.addEventListener("click", (event) => {
-        let imageData = canvas.toDataURL("image/png");
-        download.setAttribute("href", imageData);
-        imageData = "";
+
+      download.addEventListener("click", () => {
+        canvas.toBlob((blob) => {
+          const link = document.createElement("a");
+          link.download = "my-image.png";
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        });
       });
     },
   };
