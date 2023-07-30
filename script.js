@@ -1,29 +1,36 @@
+"use strict";
+
 const imageHandler = createImageHandler();
 const imageGenerator = createImageGenerator();
 const selectionImageOverlay = createSelectionImageOverlay();
 const parameterСhange = createParameterСhange("settings");
 
 imageHandler.runTheFunctionAfterImported(async () => {
-  let userImage = await imageHandler.importImageFromTheUser();
   let overlayImage;
-  imageGenerator.addMainImage(userImage);
+
+  let userImage = new Image();
+  userImage.src = await imageHandler.importImageFromTheUser();
+
+  userImage.onload = () => {
+    imageGenerator.addMainImage(userImage.src);
+    parameterСhange.setMaximumPosition(userImage.width, userImage.height);
+  };
 
   selectionImageOverlay.clickEvents((event) => {
     const { src: selectedPicture } = event.target;
     overlayImage = selectedPicture;
-    imageGenerator.overlayImage(userImage, selectedPicture, 0, 0);
+    imageGenerator.overlayImage(userImage.src, selectedPicture);
   });
 
   parameterСhange.exportPrameters((position, size) => {
     imageGenerator.overlayImage(
-      userImage,
+      userImage.src,
       overlayImage,
-      position.y,
-      position.x,
       size.width,
-      size.height
+      size.height,
+      position.y,
+      position.x
     );
-    console.log(position, size);
   });
 
   imageHandler.downloadingImage();
@@ -49,23 +56,21 @@ function createImageGenerator() {
    */
   function drawImage(url, typeImage, x, y, width, height) {
     if (!url || !typeImage) {
-      throw new Error("Указанны не все параметры");
+      throw new Error("Указанны не все корфва");
     }
 
     const img = new Image();
-
-    img.onload = () => {
-      if (typeImage === "main") {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-      }
-
-      if (typeImage === "overlay") {
-        ctx.drawImage(img, x, y, width ?? 500, height ?? 500);
-      }
-    };
     img.src = url;
+
+    if (typeImage === "main") {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    }
+
+    if (typeImage === "overlay") {
+      ctx.drawImage(img, x, y, width ?? 500, height ?? 500);
+    }
   }
 
   return {
@@ -86,7 +91,7 @@ function createImageGenerator() {
      * @param {number} [width=500] - Ширина изображения
      * @param {number} [height=500] - Высота изображения
      */
-    overlayImage(mainPicture, additionalImage, x, y, width, height) {
+    overlayImage(mainPicture, additionalImage, width, height, x = 0, y = 0) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawImage(mainPicture, "main");
       drawImage(additionalImage, "overlay", x, y, width, height);
@@ -178,6 +183,7 @@ function createParameterСhange(wrapButtons) {
 
   const wrap = document.getElementById(wrapButtons);
 
+  const maxPosition = { width: Number, height: Number };
   const position = { x: 0, y: 0 };
   const size = { width: 500, height: 500 };
 
@@ -207,15 +213,11 @@ function createParameterСhange(wrapButtons) {
           break;
       }
 
-      if (position.x < 0) {
-        position.x = 0;
-        return;
-      }
+      if (position.x < 0) position.x = 0;
+      if (position.y > maxPosition.width) position.y -= moveAmount;
 
-      if (position.y < 0) {
-        position.y = 0;
-        return;
-      }
+      if (position.y < 0) position.y = 0;
+      if (position.x > maxPosition.height) position.x -= moveAmount;
     });
   }
   moveImage();
@@ -252,6 +254,10 @@ function createParameterСhange(wrapButtons) {
         if (event.target.tagName != "BUTTON") return;
         arrowFunction(position, size);
       });
+    },
+    setMaximumPosition(width, height) {
+      maxPosition.width = width;
+      maxPosition.height = height;
     },
   };
 }
