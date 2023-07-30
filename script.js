@@ -6,7 +6,7 @@ const selectionImageOverlay = createSelectionImageOverlay();
 const parameterСhange = createParameterСhange("settings");
 
 imageHandler.runTheFunctionAfterImported(async () => {
-  let overlayImage;
+  let overlayImage = new Image();
 
   let userImage = new Image();
   userImage.src = await imageHandler.importImageFromTheUser();
@@ -18,14 +18,21 @@ imageHandler.runTheFunctionAfterImported(async () => {
 
   selectionImageOverlay.clickEvents((event) => {
     const { src: selectedPicture } = event.target;
-    overlayImage = selectedPicture;
-    imageGenerator.overlayImage(userImage.src, selectedPicture);
+    overlayImage.src = selectedPicture;
+
+    parameterСhange.trackingImage(selectedPicture);
+    imageGenerator.overlayImage(
+      userImage.src,
+      selectedPicture,
+      overlayImage.width,
+      overlayImage.height
+    );
   });
 
   parameterСhange.exportPrameters((position, size) => {
     imageGenerator.overlayImage(
       userImage.src,
-      overlayImage,
+      overlayImage.src,
       size.width,
       size.height,
       position.y,
@@ -69,7 +76,7 @@ function createImageGenerator() {
     }
 
     if (typeImage === "overlay") {
-      ctx.drawImage(img, x, y, width ?? 500, height ?? 500);
+      ctx.drawImage(img, x, y, width, height);
     }
   }
 
@@ -185,7 +192,8 @@ function createParameterСhange(wrapButtons) {
 
   const maxPosition = { width: Number, height: Number };
   const position = { x: 0, y: 0 };
-  const size = { width: 500, height: 500 };
+
+  const size = { width: 0, height: 0 };
 
   /**
    * Изменяет X,Y координаты накладываемого изображения
@@ -214,10 +222,13 @@ function createParameterСhange(wrapButtons) {
       }
 
       if (position.x < 0) position.x = 0;
-      if (position.y > maxPosition.width) position.y -= moveAmount;
+      if (position.y + size.width / 1.5 > maxPosition.width) {
+        position.y -= moveAmount;
+      }
 
       if (position.y < 0) position.y = 0;
-      if (position.x > maxPosition.height) position.x -= moveAmount;
+      if (position.x + size.height / 1.5 > maxPosition.height)
+        position.x -= moveAmount;
     });
   }
   moveImage();
@@ -226,19 +237,21 @@ function createParameterСhange(wrapButtons) {
    * Изменяет размер накладываемого изображения
    */
   function resizeImage() {
+    const increaseValue = 100;
+
     wrap.addEventListener("click", (event) => {
       if (event.target.tagName != "BUTTON") return;
 
       const button = event.target;
 
       if (button.id === "enlarge") {
-        size.width += 100;
-        size.height += 100;
+        size.width += increaseValue;
+        size.height += increaseValue;
       }
 
       if (button.id === "reduce") {
-        size.width -= 100;
-        size.height -= 100;
+        size.width -= increaseValue;
+        size.height -= increaseValue;
       }
     });
   }
@@ -249,12 +262,21 @@ function createParameterСhange(wrapButtons) {
      * При клике вызывает функцию в которую передаёт изменённые параметры.
      * @param {callback} arrowFunction - Функция в которую передадутся изменённые параметры.
      */
+    trackingImage(url) {
+      let img = new Image();
+      img.src = url;
+
+      size.width = img.width;
+      size.height = img.height;
+    },
+
     exportPrameters(arrowFunction) {
       wrap.addEventListener("click", (event) => {
         if (event.target.tagName != "BUTTON") return;
         arrowFunction(position, size);
       });
     },
+
     setMaximumPosition(width, height) {
       maxPosition.width = width;
       maxPosition.height = height;
